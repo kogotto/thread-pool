@@ -13,9 +13,10 @@ public:
     ~ThreadPool();
 private:
     void workerMain();
+
     std::vector<std::jthread> workers_;
-    std::mutex mutex;
-    std::condition_variable cv;
-    std::queue<std::function<void()>> queue;
-    bool done{false};
+    std::mutex mutex_;
+    std::condition_variable cv_;
+    std::queue<std::function<void()>> queue_;
+    bool done_{false};
 };

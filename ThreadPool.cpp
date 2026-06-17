@@ -9,9 +9,9 @@ ThreadPool::ThreadPool(int workersCount) {
 
 ThreadPool::~ThreadPool() {
     {
-        std::lock_guard lock{mutex};
-        done = true;
-        cv.notify_all();
+        std::lock_guard lock{mutex_};
+        done_ = true;
+        cv_.notify_all();
     }
     for (auto&& worker : workers_) {
         worker.join();
@@ -22,13 +22,13 @@ void ThreadPool::workerMain() {
     while (true) {
         std::function<void()> task;
         {
-            std::unique_lock lock{mutex};
-            cv.wait(lock, [this]{return done || !queue.empty();});
-            if (done && queue.empty()) {
+            std::unique_lock lock{mutex_};
+            cv_.wait(lock, [this]{return done_ || !queue_.empty();});
+            if (done_ && queue_.empty()) {
                 return;
             }
-            task = std::move(queue.front());
-            queue.pop();
+            task = std::move(queue_.front());
+            queue_.pop();
         }
         task();
     }
