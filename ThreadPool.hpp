@@ -10,6 +10,7 @@
 class ThreadPool {
 public:
     ThreadPool(int workersCount);
+    ~ThreadPool();
 private:
     void workerMain();
     std::vector<std::jthread> workers_;

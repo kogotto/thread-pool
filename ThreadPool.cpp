@@ -7,6 +7,17 @@ ThreadPool::ThreadPool(int workersCount) {
     }
 }
 
+ThreadPool::~ThreadPool() {
+    {
+        std::lock_guard lock{mutex};
+        done = true;
+        cv.notify_all();
+    }
+    for (auto&& worker : workers_) {
+        worker.join();
+    }
+}
+
 void ThreadPool::workerMain() {
     while (true) {
         std::function<void()> task;
