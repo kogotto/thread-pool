@@ -20,7 +20,7 @@ ThreadPool::~ThreadPool() {
 
 void ThreadPool::workerMain() {
     while (true) {
-        std::function<void()> task;
+        std::move_only_function<void()> task;
         {
             std::unique_lock lock{mutex_};
             cv_.wait(lock, [this]{return done_ || !queue_.empty();});
