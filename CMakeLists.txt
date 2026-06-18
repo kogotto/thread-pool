@@ -11,4 +11,18 @@ add_executable(
     ThreadPool.cpp
 )
 
+add_executable(
+    par
+
+    par.cpp
+    ThreadPool.cpp
+)
+
+add_executable(
+    seq
+
+    sec.cpp
+    ThreadPool.cpp
+)
+
 include_directories(.)
