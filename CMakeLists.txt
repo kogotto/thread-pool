@@ -25,4 +25,11 @@ add_executable(
     ThreadPool.cpp
 )
 
+add_executable(
+    wait
+
+    wait.cpp
+    ThreadPool.cpp
+)
+
 include_directories(.)
