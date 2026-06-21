@@ -8,6 +8,7 @@ add_library(
     common
 
     ThreadPool.cpp
+    SPSCQueue.cpp
 )
 
 add_executable(
