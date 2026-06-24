@@ -23,6 +23,16 @@ public:
         tail_.store(tail + 1, std::memory_order_release);
         return true;
     }
+    bool pop(T& value) {
+        const auto head = head_.load(std::memory_order_relaxed);
+        const auto tail = tail_.load(std::memory_order_acquire);
+        if (head == tail) {
+            return false;
+        }
+        value = std::move(queue_[head % N]);
+        head_.store(head + 1, std::memory_order_release);
+        return true;
+    }
 private:
     T queue_[N];
     std::atomic<size_t> head_{0};
