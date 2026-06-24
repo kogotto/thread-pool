@@ -12,6 +12,8 @@ struct SPSCQueueOverflow : public std::runtime_error {
 
 template <typename T, size_t N>
 class SPSCQueue {
+    static_assert(N > 0, "Queue can't be empty");
+    static_assert((N & (N - 1)) == 0, "N must be 2^k");
 public:
     bool push(T value) {
         const auto head = head_.load(std::memory_order_acquire);
