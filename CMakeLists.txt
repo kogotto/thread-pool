@@ -10,6 +10,11 @@ add_library(
     ThreadPool.cpp
     SPSCQueue.cpp
 )
+target_compile_options(
+    common
+    PUBLIC
+    -Wno-interference-size
+)
 
 add_executable(
     thread-pool
@@ -55,4 +60,14 @@ target_link_libraries(
     common
 )
 
+add_executable(
+    spsc_test
+
+    spsc_test.cpp
+)
+target_link_libraries(
+    spsc_test
+
+    common
+)
 include_directories(.)
