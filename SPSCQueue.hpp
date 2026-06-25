@@ -37,6 +37,6 @@ public:
     }
 private:
     T queue_[N];
-    std::atomic<size_t> head_{0};
-    std::atomic<size_t> tail_{0};
+    alignas(std::hardware_destructive_interference_size) std::atomic<size_t> head_{0};
+    alignas(std::hardware_destructive_interference_size) std::atomic<size_t> tail_{0};
 };
