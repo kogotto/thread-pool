@@ -1,18 +1,11 @@
-#include <thread>
-#include <vector>
-#include <future>
+#include <spsc_test.hpp>
 
+#include <test_common.hpp>
 #include <SPSCQueue.hpp>
 
 namespace {
 
-constexpr int TASKS_COUNT = 100'000'000;
-
 SPSCQueue<int, 2048> queue;
-
-using Ints = std::vector<int>;
-using Promise = std::promise<Ints>;
-using Future = std::future<Ints>;
 
 bool check(const Ints& result) {
     const auto resultSize = result.size();
@@ -39,10 +32,6 @@ void producerMain(Promise promise) {
     promise.set_value(std::move(misses));
 }
 
-void consume(Ints& result, int task) {
-    result.push_back(task);
-}
-
 auto consumerMain(Future future) {
     using namespace std::chrono_literals;
     Ints result;
@@ -65,7 +54,6 @@ auto consumerMain(Future future) {
     // In this point producer already finished, so we only need read queue
     // until it ends
     while (queue.pop(task)) {
-        int task;
         consume(result, task);
     }
 

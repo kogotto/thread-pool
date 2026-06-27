@@ -81,6 +81,7 @@ add_executable(
 
     bench-spsc.cpp
     spsc_test.cpp
+    mutex_queue_test.cpp
 )
 target_link_libraries(
     bench-spsc
