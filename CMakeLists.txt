@@ -76,20 +76,10 @@ target_link_libraries(
 )
 
 add_executable(
-    spsc_test
-
-    spsc_test.cpp
-)
-target_link_libraries(
-    spsc_test
-
-    common
-)
-
-add_executable(
     bench-spsc
 
     bench-spsc.cpp
+    spsc_test.cpp
 )
 target_link_libraries(
     bench-spsc
