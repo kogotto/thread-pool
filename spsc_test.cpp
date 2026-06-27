@@ -1,11 +1,10 @@
 #include <thread>
 #include <vector>
 #include <future>
-#include <chrono>
-#include <iostream>
-#include <format>
 
 #include <SPSCQueue.hpp>
+
+namespace {
 
 constexpr int TASKS_COUNT = 100'000'000;
 
@@ -82,15 +81,16 @@ auto consumerMain(Future future) {
     };
 }
 
-int main() {
+} // namespace
+
+size_t spscTest() {
     Promise promise;
     auto future = promise.get_future();
     std::jthread producer{producerMain, std::move(promise)};
     auto [producerMisses, result, consumerMisses] = consumerMain(std::move(future));
     producer.join();
-    std::cout << std::format("{} producer misses {} consumer misses\n",
-            producerMisses.size(), consumerMisses);
-    std::cout << std::format("result correct {}\n", check(result));
 
-    return 0;
+    return result.size() == 0
+        ? 1
+        : 0;
 }

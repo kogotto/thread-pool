@@ -1,24 +1,16 @@
 #include <benchmark/benchmark.h>
 
-#include <string>
+#include <spsc_test.hpp>
 
 namespace {
 
-void BM_longString(benchmark::State& state) {
+void BM_SPSCQueueTest(benchmark::State& state) {
     for (auto&& _ : state) {
-        std::string s = "Some long string to avoid small string optimization";
-        benchmark::DoNotOptimize(s);
-    }
-}
-
-void BM_smallString(benchmark::State& state) {
-    for (auto&& _ : state) {
-        std::string s = "123";
-        benchmark::DoNotOptimize(s);
+        auto result = spscTest();
+        benchmark::DoNotOptimize(result);
     }
 }
 
 } // namespace
 
-BENCHMARK(BM_longString);
-BENCHMARK(BM_smallString);
+BENCHMARK(BM_SPSCQueueTest);
