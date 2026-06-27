@@ -24,6 +24,7 @@ add_library(
 
     ThreadPool.cpp
     SPSCQueue.cpp
+    MutexQueue.cpp
 )
 target_compile_options(
     common
