@@ -8,7 +8,7 @@
 *.obj
 
 # Artifacts
-build/
+build*/
 .cache/
 compile_commands.json
 
