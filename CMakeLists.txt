@@ -70,4 +70,10 @@ target_link_libraries(
     benchmark::benchmark_main
 )
 
+add_executable(
+    atomic-counter
+
+    AtomicCounter.cpp
+)
+
 include_directories(.)
