@@ -1,19 +1,11 @@
-#include <thread>
-#include <vector>
-#include <future>
-#include <chrono>
-#include <iostream>
-#include <format>
+#include <spsc_test.hpp>
 
+#include <test_common.hpp>
 #include <SPSCQueue.hpp>
 
-constexpr int TASKS_COUNT = 100'000'000;
+namespace {
 
 SPSCQueue<int, 2048> queue;
-
-using Ints = std::vector<int>;
-using Promise = std::promise<Ints>;
-using Future = std::future<Ints>;
 
 bool check(const Ints& result) {
     const auto resultSize = result.size();
@@ -40,10 +32,6 @@ void producerMain(Promise promise) {
     promise.set_value(std::move(misses));
 }
 
-void consume(Ints& result, int task) {
-    result.push_back(task);
-}
-
 auto consumerMain(Future future) {
     using namespace std::chrono_literals;
     Ints result;
@@ -66,7 +54,6 @@ auto consumerMain(Future future) {
     // In this point producer already finished, so we only need read queue
     // until it ends
     while (queue.pop(task)) {
-        int task;
         consume(result, task);
     }
 
@@ -82,15 +69,16 @@ auto consumerMain(Future future) {
     };
 }
 
-int main() {
+} // namespace
+
+size_t spscTest() {
     Promise promise;
     auto future = promise.get_future();
     std::jthread producer{producerMain, std::move(promise)};
     auto [producerMisses, result, consumerMisses] = consumerMain(std::move(future));
     producer.join();
-    std::cout << std::format("{} producer misses {} consumer misses\n",
-            producerMisses.size(), consumerMisses);
-    std::cout << std::format("result correct {}\n", check(result));
 
-    return 0;
+    return result.size() == 0
+        ? 1
+        : 0;
 }

@@ -4,11 +4,27 @@ project(thread-pool)
 
 set(CMAKE_CXX_STANDARD 23)
 
+include(FetchContent)
+
+# Prevent the library from building its own
+# internal tests/docs to speed up your build
+set(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "" FORCE)
+set(BENCHMARK_ENABLE_INSTALL OFF CACHE BOOL "" FORCE)
+
+FetchContent_Declare(
+    googlebenchmark
+    GIT_REPOSITORY https://github.com/google/benchmark.git
+    GIT_TAG        v1.9.5
+)
+
+FetchContent_MakeAvailable(googlebenchmark)
+
 add_library(
     common
 
     ThreadPool.cpp
     SPSCQueue.cpp
+    MutexQueue.cpp
 )
 target_compile_options(
     common
@@ -61,13 +77,18 @@ target_link_libraries(
 )
 
 add_executable(
-    spsc_test
+    bench-spsc
 
+    bench-spsc.cpp
     spsc_test.cpp
+    mutex_queue_test.cpp
 )
 target_link_libraries(
-    spsc_test
+    bench-spsc
 
     common
+    benchmark::benchmark
+    benchmark::benchmark_main
 )
+
 include_directories(.)
