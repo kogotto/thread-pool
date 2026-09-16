@@ -21,7 +21,8 @@ int main() {
 
     std::cout << "result = " << *result << std::endl;
     std::cout << "counter = " << counter << std::endl;
-    delete result;
+
+    delete result.load(std::memory_order_relaxed);
 
     return 0;
 }
