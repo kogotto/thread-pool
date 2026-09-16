@@ -1,0 +1,9 @@
+#!/bin/bash
+
+BUILD_DIR="build"
+OPTIONS="
+-DCMAKE_EXPORT_COMPILE_COMMANDS=1
+-DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+"
+REL_BUILD_DIR="build-rel"
+TSAN_BUILD_DIR="build-tsan"
