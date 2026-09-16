@@ -88,4 +88,10 @@ add_executable(
     AtomicPointer.cpp
 )
 
+add_executable(
+    paralel-max
+
+    ParalelMax.cpp
+)
+
 include_directories(.)
