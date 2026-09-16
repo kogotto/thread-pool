@@ -19,6 +19,18 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(googlebenchmark)
 
+# 1. Define a custom configuration profile for Sanitizers
+set(CMAKE_CONFIGURATION_TYPES "${CMAKE_CONFIGURATION_TYPES};TSAN" CACHE STRING "" FORCE)
+
+# 2. Configure flags specifically for the 'TSAN' build type
+if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+    # Global compilation flags for all targets
+    add_compile_options("$<$<CONFIG:TSAN>:-fsanitize=thread;-fno-omit-frame-pointer;-g>")
+
+    # Global linking flags for all targets
+    add_link_options("$<$<CONFIG:TSAN>:-fsanitize=thread>")
+endif()
+
 add_library(
     common
 
