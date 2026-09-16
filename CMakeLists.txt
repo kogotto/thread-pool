@@ -56,39 +56,6 @@ target_link_libraries(
 )
 
 add_executable(
-    par
-
-    par.cpp
-)
-target_link_libraries(
-    par
-
-    common
-)
-
-add_executable(
-    seq
-
-    sec.cpp
-)
-target_link_libraries(
-    seq
-
-    common
-)
-
-add_executable(
-    wait
-
-    wait.cpp
-)
-target_link_libraries(
-    wait
-
-    common
-)
-
-add_executable(
     bench-spsc
 
     bench-spsc.cpp
