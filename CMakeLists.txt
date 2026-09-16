@@ -82,4 +82,10 @@ add_executable(
     AtomicReady.cpp
 )
 
+add_executable(
+    atomic-pointer
+
+    AtomicPointer.cpp
+)
+
 include_directories(.)
