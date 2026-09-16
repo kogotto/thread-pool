@@ -76,4 +76,10 @@ add_executable(
     AtomicCounter.cpp
 )
 
+add_executable(
+    atomic-ready
+
+    AtomicReady.cpp
+)
+
 include_directories(.)
