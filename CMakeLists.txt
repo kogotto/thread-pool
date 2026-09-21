@@ -121,4 +121,18 @@ target_link_libraries(
     GTest::gtest_main
 )
 
+add_executable(
+    fetch-add-vs-cas-counter-bench
+
+    FetchAddCounterBench.cpp
+    CasCounterBench.cpp
+)
+target_link_libraries(
+    fetch-add-vs-cas-counter-bench
+
+    fetch-add-vs-cas-counter
+    benchmark::benchmark
+    benchmark::benchmark_main
+)
+
 include_directories(.)
