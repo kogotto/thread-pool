@@ -4,23 +4,21 @@
 
 namespace {
 
-void BM_RelaxedCounter(benchmark::State& state) {
-    for (auto&& _ : state) {
-        auto result = fetchAddCounterMain(
-            1000,
-            10'000,
-            std::memory_order_relaxed
-        );
-        benchmark::DoNotOptimize(result);
-    }
+inline auto toInt(std::memory_order order) {
+    return static_cast<int64_t>(order);
 }
 
-void BM_SeqCstCounter(benchmark::State& state) {
+inline auto fromInt(int64_t value) {
+    return static_cast<std::memory_order>(value);
+}
+
+void BM_CounterWithCustomOrder(benchmark::State& state) {
+    auto order = fromInt(state.range(0));
     for (auto&& _ : state) {
         auto result = fetchAddCounterMain(
             1000,
-            10'000,
-            std::memory_order_seq_cst
+            1000'000,
+            order
         );
         benchmark::DoNotOptimize(result);
     }
@@ -28,5 +26,7 @@ void BM_SeqCstCounter(benchmark::State& state) {
 
 } // namespace
 
-BENCHMARK(BM_RelaxedCounter);
-BENCHMARK(BM_SeqCstCounter);
+BENCHMARK(BM_CounterWithCustomOrder)
+    ->Arg(toInt(std::memory_order_relaxed))
+    ->Arg(toInt(std::memory_order_seq_cst))
+    ->ArgName("order");
