@@ -2,6 +2,8 @@
 #include <thread>
 #include <vector>
 
+#include <FetchAddCounter.hpp>
+
 namespace {
 
 std::atomic<int> counter{0};

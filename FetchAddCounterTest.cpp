@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-int fetchAddCounterMain(int threadsCount);
+#include <FetchAddCounter.hpp>
 
 TEST(FetchAddCounter, Test) {
     constexpr int count = 1000;
