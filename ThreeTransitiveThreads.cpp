@@ -28,6 +28,7 @@ void threadBMain(int result) {
 
 Result threeTransitiveThreads(int resultA, int resultB) {
     aReady.store(false, std::memory_order_relaxed);
+    bReady.store(false, std::memory_order_relaxed);
 
     std::jthread aThread{threadAMain, resultA};
     std::jthread bThread{threadBMain, resultB};
