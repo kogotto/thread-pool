@@ -16,13 +16,13 @@ int main() {
         [] {
             result = heavyComputation();
             // ready.store(true);
-            ready.store(true, std::memory_order_release);
+            ready.store(true, std::memory_order_relaxed);
         }
     };
 
     int counter{0};
     // while (!ready) {
-    while (!ready.load(std::memory_order_acquire)) {
+    while (!ready.load(std::memory_order_relaxed)) {
         ++counter;
     }
 
