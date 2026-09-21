@@ -1,3 +1,3 @@
 #pragma once
 
-int fetchAddCounterMain(int threadsCount);
+int fetchAddCounterMain(int threadsCount, int iterations);

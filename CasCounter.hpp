@@ -1,3 +1,3 @@
 #pragma once
 
-int casCounterMain(int threadsCount);
+int casCounterMain(int threadsCount, int iterations);

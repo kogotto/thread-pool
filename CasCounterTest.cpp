@@ -4,5 +4,6 @@
 
 TEST(CasCounter, Test) {
     constexpr int count = 1000;
-    ASSERT_EQ(count, casCounterMain(count));
+    constexpr int iterations = 10000;
+    ASSERT_EQ(count * iterations, casCounterMain(count, iterations));
 }

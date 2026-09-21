@@ -6,7 +6,7 @@ namespace {
 
 void BM_CasCounterBench(benchmark::State& state) {
     for (auto&& _ : state) {
-        auto result = casCounterMain(1000);
+        auto result = casCounterMain(1000, 10'000);
         benchmark::DoNotOptimize(result);
     }
 }
