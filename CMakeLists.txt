@@ -153,4 +153,17 @@ target_link_libraries(
     GTest::gtest_main
 )
 
+add_executable(
+    relaxed-vs-seq-cst-counter-bench
+
+    RelaxedVsSeqCstCounterBench.cpp
+)
+target_link_libraries(
+    relaxed-vs-seq-cst-counter-bench
+
+    fetch-add-vs-cas-counter
+    benchmark::benchmark
+    benchmark::benchmark_main
+)
+
 include_directories(.)
