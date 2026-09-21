@@ -166,4 +166,22 @@ target_link_libraries(
     benchmark::benchmark_main
 )
 
+add_library(
+    three-transitive-threads
+
+    ThreeTransitiveThreads.cpp
+)
+add_executable(
+    three-transitive-threads-test
+
+    ThreeTransitiveThreadsTest.cpp
+)
+target_link_libraries(
+    three-transitive-threads-test
+
+    three-transitive-threads
+    GTest::gtest
+    GTest::gtest_main
+)
+
 include_directories(.)
