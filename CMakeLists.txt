@@ -16,8 +16,14 @@ FetchContent_Declare(
     GIT_REPOSITORY https://github.com/google/benchmark.git
     GIT_TAG        v1.9.5
 )
-
 FetchContent_MakeAvailable(googlebenchmark)
+
+FetchContent_Declare(
+  googletest
+  GIT_REPOSITORY https://github.com/google/googletest.git
+  GIT_TAG v1.18.0
+)
+FetchContent_MakeAvailable(googletest)
 
 # 1. Define a custom configuration profile for Sanitizers
 set(CMAKE_CONFIGURATION_TYPES "${CMAKE_CONFIGURATION_TYPES};TSAN" CACHE STRING "" FORCE)
@@ -92,6 +98,41 @@ add_executable(
     paralel-max
 
     ParalelMax.cpp
+)
+
+add_library(
+    fetch-add-vs-cas-counter
+
+    FetchAddCounter.cpp
+    CasCounter.cpp
+)
+
+add_executable(
+    fetch-add-vs-cas-counter-test
+
+    FetchAddCounterTest.cpp
+    CasCounterTest.cpp
+)
+target_link_libraries(
+    fetch-add-vs-cas-counter-test
+
+    fetch-add-vs-cas-counter
+    GTest::gtest
+    GTest::gtest_main
+)
+
+add_executable(
+    fetch-add-vs-cas-counter-bench
+
+    FetchAddCounterBench.cpp
+    CasCounterBench.cpp
+)
+target_link_libraries(
+    fetch-add-vs-cas-counter-bench
+
+    fetch-add-vs-cas-counter
+    benchmark::benchmark
+    benchmark::benchmark_main
 )
 
 include_directories(.)
