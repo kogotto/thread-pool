@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-int casCounterMain(int threadsCount);
+#include <CasCounter.hpp>
 
 TEST(CasCounter, Test) {
     constexpr int count = 1000;

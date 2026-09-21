@@ -2,6 +2,8 @@
 #include <thread>
 #include <vector>
 
+#include <CasCounter.hpp>
+
 namespace {
 
 std::atomic<int> counter{0};
