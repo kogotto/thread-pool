@@ -135,4 +135,22 @@ target_link_libraries(
     benchmark::benchmark_main
 )
 
+add_library(
+    atomic-stack
+
+    AtomicStack.cpp
+)
+add_executable(
+    atomic-stack-test
+
+    AtomicStackTest.cpp
+)
+target_link_libraries(
+    atomic-stack-test
+
+    atomic-stack
+    GTest::gtest
+    GTest::gtest_main
+)
+
 include_directories(.)
