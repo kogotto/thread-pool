@@ -9,8 +9,8 @@
 
 namespace {
 
-constexpr int threadsCount{1000};
-constexpr int iterations{1'000};
+constexpr int threadsCount{4};
+constexpr int iterations{1'000'000};
 // constexpr int iterations{1'000'000};
 
 template <typename Lock>
