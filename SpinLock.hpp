@@ -2,7 +2,7 @@
 
 #include <atomic>
 
-template <bool Paused>
+template <bool Paused = false>
 class SpinLock {
 public:
     void lock() {
