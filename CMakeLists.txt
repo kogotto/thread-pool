@@ -189,5 +189,17 @@ add_library(
 
     SpinLock.cpp
 )
+add_executable(
+    spin-lock-bench
+
+    SpinLockBench.cpp
+)
+target_link_libraries(
+    spin-lock-bench
+
+    spin-lock
+    benchmark::benchmark
+    benchmark::benchmark_main
+)
 
 include_directories(.)
