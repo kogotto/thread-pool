@@ -13,7 +13,7 @@ public:
         }
     }
     void unlock() {
-        acquired_.clear();
+        acquired_.clear(std::memory_order_release);
     }
 private:
     std::atomic_flag acquired_{};
