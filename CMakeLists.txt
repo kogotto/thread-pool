@@ -184,4 +184,34 @@ target_link_libraries(
     GTest::gtest_main
 )
 
+add_library(
+    spin-lock
+
+    SpinLock.cpp
+)
+add_executable(
+    spin-lock-bench
+
+    SpinLockBench.cpp
+)
+target_link_libraries(
+    spin-lock-bench
+
+    spin-lock
+    benchmark::benchmark
+    benchmark::benchmark_main
+)
+add_executable(
+    spin-lock-test
+
+    SpinLockTest.cpp
+)
+target_link_libraries(
+    spin-lock-test
+
+    spin-lock
+    GTest::gtest
+    GTest::gtest_main
+)
+
 include_directories(.)
