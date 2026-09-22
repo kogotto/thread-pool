@@ -184,4 +184,10 @@ target_link_libraries(
     GTest::gtest_main
 )
 
+add_library(
+    spin-lock
+
+    SpinLock.cpp
+)
+
 include_directories(.)
