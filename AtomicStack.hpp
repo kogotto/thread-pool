@@ -1,6 +1,7 @@
 #pragma once
 
 #include <atomic>
+#include <optional>
 
 template <typename T>
 class AtomicStack {
@@ -19,6 +20,18 @@ public:
     void push(int payload) {
         auto newNode = new Node{payload, head_.load(std::memory_order_relaxed)};
         while (!head_.compare_exchange_weak(newNode->next, newNode)) {}
+    }
+
+    std::optional<value_type> pop() {
+        Node* oldHead = head_.load(std::memory_order_relaxed);
+        while (oldHead != nullptr &&
+                !head_.compare_exchange_weak(oldHead, oldHead->next));
+        if (oldHead == nullptr) {
+            return std::nullopt;
+        }
+        value_type result = std::move(oldHead->payload);
+        delete oldHead;
+        return result;
     }
 
     Node* head(std::memory_order order = std::memory_order_relaxed) const {
