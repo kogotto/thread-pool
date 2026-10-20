@@ -3,40 +3,69 @@
 #include <atomic>
 #include <optional>
 
+#include <TaggedPointer.hpp>
+
 template <typename T>
 class AtomicStack {
 public:
     using value_type = T;
 
     struct Node {
-        value_type payload;
-        Node* next;
+        value_type payload{0};
+        Node* next{nullptr};
     };
 
+    using TaggedPointer = ::TaggedPointer<Node>;
+    using AtomicTaggedPointer = std::atomic<TaggedPointer>;
+    static_assert(AtomicTaggedPointer::is_always_lock_free);
+
     ~AtomicStack() {
-        freeLinkedList(head_.load(std::memory_order_relaxed));
+        freeLinkedList(head_.load(std::memory_order_relaxed).pointer());
     }
 
-    void push(int payload) {
-        auto newNode = new Node{payload, head_.load(std::memory_order_relaxed)};
-        while (!head_.compare_exchange_weak(newNode->next, newNode)) {}
+    void push(value_type payload) {
+        auto newNode = new Node{payload};
+        TaggedPointer oldHead = head_.load(std::memory_order_acquire);
+
+        newNode->next = oldHead.pointer();
+        TaggedPointer newHead = oldHead;
+        newHead.setPointer(newNode);
+
+        while (!head_.compare_exchange_weak(oldHead, newHead)) {
+            newNode->next = oldHead.pointer();
+            newHead.setCounter(oldHead.counter());
+            newHead.setPointer(newNode);
+        }
     }
 
     std::optional<value_type> pop() {
-        Node* oldHead = head_.load(std::memory_order_relaxed);
-        while (oldHead != nullptr &&
-                !head_.compare_exchange_weak(oldHead, oldHead->next));
-        if (oldHead == nullptr) {
+        TaggedPointer oldHead = head_.load(std::memory_order_acquire);
+        if (oldHead.pointer() == nullptr) {
             return std::nullopt;
         }
-        value_type result = std::move(oldHead->payload);
-        delete oldHead;
+
+        TaggedPointer newHead{
+            oldHead.counter() + static_cast<uint16_t>(1),
+            oldHead.pointer()->next
+        };
+        while (!head_.compare_exchange_weak(oldHead, newHead)) {
+            if (oldHead.pointer() == nullptr) {
+                return std::nullopt;
+            }
+            newHead.setCounter(oldHead.counter() + static_cast<uint16_t>(1));
+            newHead.setPointer(oldHead.pointer()->next);
+        }
+
+        Node* node = oldHead.pointer();
+        value_type result = std::move(node->payload);
+        delete node;
         return result;
     }
 
     Node* head(std::memory_order order = std::memory_order_relaxed) const {
-        return head_.load(order);
+        return head_.load(order).pointer();
     }
+
 private:
     static void freeLinkedList(Node* head) {
         while (head != nullptr) {
@@ -46,7 +75,7 @@ private:
         }
     }
 
-    std::atomic<Node*> head_{nullptr};
+    AtomicTaggedPointer head_;
 };
 
 template <typename N>
