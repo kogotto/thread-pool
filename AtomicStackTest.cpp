@@ -8,7 +8,7 @@
 
 namespace {
 
-AtomicStack stack;
+AtomicStack<int> stack;
 
 void threadMain(int nodesCount) {
     for (auto i : std::views::iota(0, nodesCount)) {

@@ -2,10 +2,13 @@
 
 #include <atomic>
 
+template <typename T>
 class AtomicStack {
 public:
+    using value_type = T;
+
     struct Node {
-        int payload;
+        value_type payload;
         Node* next;
     };
 
