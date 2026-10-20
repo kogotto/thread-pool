@@ -18,7 +18,7 @@ void threadMain(int nodesCount) {
 
 } // namespace
 
-TEST(AtomicStack, Test) {
+TEST(AtomicStack, Push) {
     constexpr int threadsCount = 8;
     constexpr int nodesPerThread = 1'000'000;
 
