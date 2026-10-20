@@ -28,12 +28,13 @@ public:
         TaggedPointer oldHead = head_.load(std::memory_order_acquire);
 
         newNode->next = oldHead.pointer();
-        TaggedPointer newHead = oldHead;
+        TaggedPointer newHead;
+        newHead.setCounter(oldHead.counter() + 1);
         newHead.setPointer(newNode);
 
         while (!head_.compare_exchange_weak(oldHead, newHead)) {
             newNode->next = oldHead.pointer();
-            newHead.setCounter(oldHead.counter());
+            newHead.setCounter(oldHead.counter() + 1);
             newHead.setPointer(newNode);
         }
     }
