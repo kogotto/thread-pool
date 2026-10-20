@@ -10,7 +10,7 @@ namespace {
 
 AtomicStack<int> stack;
 
-void threadMain(int nodesCount) {
+void pushThreadMain(int nodesCount) {
     for (auto i : std::views::iota(0, nodesCount)) {
         stack.push(i);
     }
@@ -25,7 +25,7 @@ TEST(AtomicStack, Push) {
     std::vector<std::jthread> threads;
     threads.reserve(threadsCount);
     for (auto i : std::views::iota(0, threadsCount)) {
-        threads.emplace_back(threadMain, nodesPerThread);
+        threads.emplace_back(pushThreadMain, nodesPerThread);
     }
 
     for (auto&& thread : threads) {
