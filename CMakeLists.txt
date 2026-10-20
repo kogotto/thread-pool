@@ -144,6 +144,7 @@ add_executable(
     atomic-stack-test
 
     AtomicStackTestPush.cpp
+    AtomicStackTestPop.cpp
 )
 target_link_libraries(
     atomic-stack-test
