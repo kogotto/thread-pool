@@ -214,4 +214,23 @@ target_link_libraries(
     GTest::gtest_main
 )
 
+add_library(
+    ref-counter
+
+    MySharedPtr.cpp
+)
+add_executable(
+    ref-counter-test
+
+    MySharedPtrTest.cpp
+)
+target_link_libraries(
+    ref-counter-test
+
+    ref-counter
+    GTest::gtest
+    GTest::gtest_main
+)
+
+
 include_directories(.)
