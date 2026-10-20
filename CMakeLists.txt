@@ -143,7 +143,7 @@ add_library(
 add_executable(
     atomic-stack-test
 
-    AtomicStackTest.cpp
+    AtomicStackTestPush.cpp
 )
 target_link_libraries(
     atomic-stack-test
