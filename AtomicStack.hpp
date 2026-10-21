@@ -11,7 +11,7 @@ public:
     using value_type = T;
 
     struct Node {
-        value_type payload{0};
+        value_type payload{};
         Node* next{nullptr};
     };
 
@@ -24,7 +24,7 @@ public:
     }
 
     void push(value_type payload) {
-        auto newNode = new Node{payload};
+        auto newNode = new Node{std::move(payload)};
         TaggedPointer oldHead = head_.load(std::memory_order_acquire);
 
         newNode->next = oldHead.pointer();
