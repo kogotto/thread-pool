@@ -30,8 +30,7 @@ public:
         TaggedPointer newHead;
         do {
             newNode->next = oldHead.pointer();
-            newHead.setCounter(oldHead.counter() + 1);
-            newHead.setPointer(newNode);
+            newHead = oldHead.next(newNode);
         } while (!head_.compare_exchange_weak(oldHead, newHead));
     }
 
@@ -43,8 +42,7 @@ public:
             if (oldHead.pointer() == nullptr) {
                 return std::nullopt;
             }
-            newHead.setCounter(oldHead.counter() + 1);
-            newHead.setPointer(oldHead.pointer()->next);
+            newHead = oldHead.next(oldHead.pointer()->next);
         } while (!head_.compare_exchange_weak(oldHead, newHead));
 
         Node* node = oldHead.pointer();

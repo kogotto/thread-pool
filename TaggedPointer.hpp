@@ -13,6 +13,13 @@ struct TaggedPointer {
         , pointer_{reinterpret_cast<uint64_t>(pointer)} {
     }
 
+    TaggedPointer next(T* newPointer) {
+        return {
+            static_cast<uint16_t>(counter() + 1),
+            newPointer
+        };
+    }
+
     void setPointer(T* p) {
         pointer_ = reinterpret_cast<uint64_t>(p);
     }
