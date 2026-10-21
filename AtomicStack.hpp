@@ -37,21 +37,15 @@ public:
 
     std::optional<value_type> pop() {
         TaggedPointer oldHead = head_.load(std::memory_order_acquire);
-        if (oldHead.pointer() == nullptr) {
-            return std::nullopt;
-        }
 
-        TaggedPointer newHead{
-            oldHead.counter() + static_cast<uint16_t>(1),
-            oldHead.pointer()->next
-        };
-        while (!head_.compare_exchange_weak(oldHead, newHead)) {
+        TaggedPointer newHead;
+        do {
             if (oldHead.pointer() == nullptr) {
                 return std::nullopt;
             }
-            newHead.setCounter(oldHead.counter() + static_cast<uint16_t>(1));
+            newHead.setCounter(oldHead.counter() + 1);
             newHead.setPointer(oldHead.pointer()->next);
-        }
+        } while (!head_.compare_exchange_weak(oldHead, newHead));
 
         Node* node = oldHead.pointer();
         value_type result = std::move(node->payload);
