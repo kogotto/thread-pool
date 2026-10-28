@@ -46,5 +46,3 @@ private:
     EpochManager<int>* manager_;
     int threadId_;
 };
-
-int getThreadId();
