@@ -232,5 +232,23 @@ target_link_libraries(
     GTest::gtest_main
 )
 
+add_library(
+    ebr-atomic-stack
+
+    EbrAtomicStack.cpp
+)
+add_executable(
+    ebr-atomic-stack-test
+
+    EbrAtomicStackTest.cpp
+    EbrAtomicStackHighLoadTest.cpp
+)
+target_link_libraries(
+    ebr-atomic-stack-test
+
+    ebr-atomic-stack
+    GTest::gtest
+    GTest::gtest_main
+)
 
 include_directories(.)
