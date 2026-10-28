@@ -1,6 +1,7 @@
 #pragma once
 
 #include <atomic>
+#include <optional>
 
 template <typename T>
 class EbrAtomicStack {
@@ -18,6 +19,18 @@ public:
             head_.load(std::memory_order_relaxed)
         };
         while (!head_.compare_exchange_weak(newNode->next, newNode));
+    }
+
+    std::optional<T> pop() {
+        auto head = head_.load(std::memory_order_relaxed);
+        while (head != nullptr &&
+               !head_.compare_exchange_weak(head, head->next));
+        if (head == nullptr) {
+            return std::nullopt;
+        }
+        value_type result = std::move(head->payload);
+        delete head;
+        return result;
     }
 
     ~EbrAtomicStack() {
