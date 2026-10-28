@@ -3,17 +3,14 @@
 #include <atomic>
 #include <optional>
 
+#include <Node.hpp>
 #include <TaggedPointer.hpp>
 
 template <typename T>
 class AtomicStack {
 public:
-    using value_type = T;
-
-    struct Node {
-        value_type payload{};
-        Node* next{nullptr};
-    };
+    using Node = ::Node<T>;
+    using value_type = Node::value_type;
 
     using TaggedPointer = ::TaggedPointer<Node>;
     using AtomicTaggedPointer = std::atomic<TaggedPointer>;

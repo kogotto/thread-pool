@@ -138,6 +138,7 @@ target_link_libraries(
 add_library(
     atomic-stack
 
+    Node.cpp
     AtomicStack.cpp
 )
 add_executable(
