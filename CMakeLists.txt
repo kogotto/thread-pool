@@ -140,6 +140,7 @@ add_library(
 
     Node.cpp
     AtomicStack.cpp
+    EpochManager.cpp
 )
 add_executable(
     atomic-stack-test
