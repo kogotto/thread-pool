@@ -12,6 +12,14 @@ public:
         Node* next;
     };
 
+    void push(value_type payload) {
+        Node* newNode = new Node{
+            std::move(payload),
+            head_.load(std::memory_order_relaxed)
+        };
+        while (!head_.compare_exchange_weak(newNode->next, newNode));
+    }
+
     ~EbrAtomicStack() {
         freeLinkedList(head_.load(std::memory_order_relaxed));
     }
