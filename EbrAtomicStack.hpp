@@ -13,6 +13,10 @@ public:
         Node* next;
     };
 
+    Node* head(std::memory_order order = std::memory_order_relaxed) const {
+        return head_.load(order);
+    }
+
     void push(value_type payload) {
         Node* newNode = new Node{
             std::move(payload),

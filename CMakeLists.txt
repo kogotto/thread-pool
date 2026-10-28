@@ -241,6 +241,7 @@ add_executable(
     ebr-atomic-stack-test
 
     EbrAtomicStackTest.cpp
+    EbrAtomicStackHighLoadTest.cpp
 )
 target_link_libraries(
     ebr-atomic-stack-test
