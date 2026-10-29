@@ -3,6 +3,8 @@
 #include <atomic>
 #include <optional>
 
+#include <EpochManager.hpp>
+#include <Idfier.hpp>
 #include <Node.hpp>
 #include <TaggedPointer.hpp>
 
@@ -32,8 +34,10 @@ public:
     }
 
     std::optional<value_type> pop() {
-        TaggedPointer oldHead = head_.load(std::memory_order_acquire);
+        const auto threadId = idfier_.threadId();
+        EpochGuard epochGuard{epochManager_, threadId};
 
+        TaggedPointer oldHead = head_.load(std::memory_order_acquire);
         TaggedPointer newHead;
         do {
             if (oldHead.pointer() == nullptr) {
@@ -44,7 +48,11 @@ public:
 
         Node* node = oldHead.pointer();
         value_type result = std::move(node->payload);
-        delete node;
+
+        epochManager_.retire(threadId, node);
+        epochGuard.leave();
+        epochManager_.tryAdvance(threadId);
+
         return result;
     }
 
@@ -62,6 +70,8 @@ private:
     }
 
     AtomicTaggedPointer head_;
+    Idfier idfier_;
+    EpochManager<value_type> epochManager_;
 };
 
 template <typename N>
