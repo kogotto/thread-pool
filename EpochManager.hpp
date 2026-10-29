@@ -112,6 +112,6 @@ public:
     }
 
 private:
-    EpochManager<int>* manager_;
+    EpochManager<T>* manager_;
     int threadId_;
 };
