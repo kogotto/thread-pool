@@ -8,9 +8,14 @@
 
 #include <Node.hpp>
 
+using Epoch = uint64_t;
+using AtomicEpoch = std::atomic<Epoch>;
+static_assert(AtomicEpoch::is_always_lock_free);
+
 constexpr size_t MAX_THREADS_COUNT = 1000;
-constexpr uint64_t THREAD_NOT_ACTIVE = 0;
-constexpr uint64_t EPOCHS_COUNT = 3;
+constexpr Epoch THREAD_NOT_ACTIVE = 0;
+constexpr Epoch START_EPOCH = THREAD_NOT_ACTIVE + 1;
+constexpr Epoch EPOCHS_COUNT = 3;
 
 template <typename T>
 class EpochManager {
@@ -46,7 +51,7 @@ public:
     }
 
     void tryAdvance(int threadId) {
-        uint64_t currentEpoch = globalEpoch_.load();
+        auto currentEpoch = globalEpoch_.load();
         if (!allThreadsInCurrentEpoch(currentEpoch)) {
             return;
         }
@@ -56,7 +61,7 @@ public:
             return;
         }
 
-        const uint64_t safeEpoch = (currentEpoch - 2 + EPOCHS_COUNT) % EPOCHS_COUNT;
+        const auto safeEpoch = (currentEpoch - 2 + EPOCHS_COUNT) % EPOCHS_COUNT;
         deleteNodes(retired_[threadId][safeEpoch]);
     }
 private:
@@ -67,13 +72,13 @@ private:
         nodes.clear();
     }
 
-    bool allThreadsInCurrentEpoch(uint64_t currentEpoch) {
+    bool allThreadsInCurrentEpoch(Epoch currentEpoch) {
         auto fromAtomic =
-            [] (const std::atomic<uint64_t>& epoch) {
+            [] (const AtomicEpoch& epoch) {
                 return epoch.load(std::memory_order_acquire);
             };
         auto inCurrentEpoch =
-            [currentEpoch] (uint64_t epoch) {
+            [currentEpoch] (Epoch epoch) {
                 return epoch == THREAD_NOT_ACTIVE || epoch == currentEpoch;
             };
         return std::ranges::all_of(
@@ -83,8 +88,8 @@ private:
         );
     }
 
-    std::atomic<uint64_t> globalEpoch_{1};
-    std::array<std::atomic<uint64_t>, MAX_THREADS_COUNT> threadEpochs_{};
+    AtomicEpoch globalEpoch_{START_EPOCH};
+    std::array<AtomicEpoch, MAX_THREADS_COUNT> threadEpochs_{};
     std::array<
         std::array<std::vector<Node*>, EPOCHS_COUNT>,
         MAX_THREADS_COUNT
