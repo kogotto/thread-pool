@@ -51,7 +51,10 @@ public:
             return;
         }
 
-        globalEpoch_.compare_exchange_strong(currentEpoch, currentEpoch + 1);
+        if (!globalEpoch_.compare_exchange_strong(
+                    currentEpoch, currentEpoch + 1)) {
+            return;
+        }
 
         const uint64_t safeEpoch = (currentEpoch - 2 + EPOCHS_COUNT) % EPOCHS_COUNT;
         deleteNodes(retired_[threadId][safeEpoch]);
