@@ -90,14 +90,13 @@ bool check(const Payload& payload) {
     if (payload.size() != NODES_COUNT) {
         return false;
     }
-    if (payload[0] != 0) {
-        return false;
-    }
-    for (auto i : std::views::iota(0, NODES_COUNT)) {
-        if (payload[i] != i) {
+
+    for (auto [index, value] : std::views::enumerate(payload)) {
+        if (index != value) {
             return false;
         }
     }
+
     return true;
 }
 
