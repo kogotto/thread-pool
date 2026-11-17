@@ -138,12 +138,17 @@ target_link_libraries(
 add_library(
     atomic-stack
 
+    Node.cpp
     AtomicStack.cpp
+    EpochManager.cpp
+    Idfier.cpp
 )
 add_executable(
     atomic-stack-test
 
-    AtomicStackTest.cpp
+    AtomicStackTestPush.cpp
+    AtomicStackTestPop.cpp
+    IdfierTest.cpp
 )
 target_link_libraries(
     atomic-stack-test

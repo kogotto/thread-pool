@@ -8,9 +8,9 @@
 
 namespace {
 
-AtomicStack stack;
+AtomicStack<int> stack;
 
-void threadMain(int nodesCount) {
+void pushThreadMain(int nodesCount) {
     for (auto i : std::views::iota(0, nodesCount)) {
         stack.push(i);
     }
@@ -18,14 +18,14 @@ void threadMain(int nodesCount) {
 
 } // namespace
 
-TEST(AtomicStack, Test) {
+TEST(AtomicStack, Push) {
     constexpr int threadsCount = 8;
     constexpr int nodesPerThread = 1'000'000;
 
     std::vector<std::jthread> threads;
     threads.reserve(threadsCount);
     for (auto i : std::views::iota(0, threadsCount)) {
-        threads.emplace_back(threadMain, nodesPerThread);
+        threads.emplace_back(pushThreadMain, nodesPerThread);
     }
 
     for (auto&& thread : threads) {
